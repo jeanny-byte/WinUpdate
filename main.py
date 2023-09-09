@@ -5,14 +5,12 @@ import ctypes
 import time
 
 
-
-
-
 def is_admin():
     try:
         return os.getuid() == 0
     except AttributeError:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
+
 
 def run_as_admin():
     if is_admin():
@@ -24,8 +22,8 @@ def run_as_admin():
         shell_cmd = f'powershell -Command "Start-Process \'{sys.executable}\' -ArgumentList \'{params}\' -Verb RunAs"'
         subprocess.run(shell_cmd, shell=True)
 
-def stop_windows_update_service():
 
+def stop_windows_update_service():
     try:
         subprocess.run(['net', 'stop', 'wuauserv'], check=True)
     except subprocess.CalledProcessError as e:
@@ -36,7 +34,6 @@ def stop_windows_update_service():
 
 if __name__ == "__main__":
     while True:
-
         run_as_admin()
         # Wait for 20 minutes before the next execution
         time.sleep(5 * 60)
